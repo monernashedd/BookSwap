@@ -17,14 +17,22 @@ namespace BookSwap.Application.Implementations
         private readonly IExchangeOfferRepositoryAsync _exchangeOfferRepository;
         private readonly IBookRepositoryAsync _bookRepository;
         private readonly IUserRepositoryAsync _userRepository;
+        private readonly IWishlistItemRepositoryAsync _wishlistItemRepo;
         private readonly IOfferedBookRepositoryAsync _offeredBookRepository;
         private readonly IBookOwnershipHistoryRepositoryAsync _bookOwnershipHistoryRepository;
         public ICurrentUserService _currentUserService { get; }
 
-        public ExchangeOfferService(IExchangeOfferRepositoryAsync exchangeOfferRepository, IBookRepositoryAsync bookRepository, IUserRepositoryAsync userRepositoryAsync, ICurrentUserService currentUserService, IOfferedBookRepositoryAsync offeredBookRepositoryAsync, IBookOwnershipHistoryRepositoryAsync bookOwnershipHistoryRepository)
+        public ExchangeOfferService(IExchangeOfferRepositoryAsync exchangeOfferRepository, 
+                                    IBookRepositoryAsync bookRepository, 
+                                    IUserRepositoryAsync userRepositoryAsync, 
+                                    ICurrentUserService currentUserService,
+                                    IOfferedBookRepositoryAsync offeredBookRepositoryAsync, 
+                                    IWishlistItemRepositoryAsync wishlistItemRepository, 
+                                    IBookOwnershipHistoryRepositoryAsync bookOwnershipHistoryRepository)
         {
             _exchangeOfferRepository = exchangeOfferRepository;
             _bookRepository = bookRepository;
+            _wishlistItemRepo = wishlistItemRepository;
             _userRepository = userRepositoryAsync;
             _currentUserService = currentUserService;
             _offeredBookRepository = offeredBookRepositoryAsync;
@@ -119,6 +127,15 @@ namespace BookSwap.Application.Implementations
 
                 ).ToList()
                 };
+                if (request.WishlistItemId.HasValue)
+                {
+                    var wishITem = await _wishlistItemRepo.GetWishlistItemByIdAsync(request.WishlistItemId.Value);
+                    if (wishITem is null)
+                        return Result<ExchangeOfferResponse>.NotFound("Wish Item Not Found");
+                    newExchangeOffer.WishlistItemId = request.WishlistItemId;
+                    wishITem.Status = WishStatus.PendingExchange;
+                    await _wishlistItemRepo.UpdateAsync(wishITem);
+                }
                 await _exchangeOfferRepository.AddAsync(newExchangeOffer);
 
 
@@ -188,7 +205,7 @@ namespace BookSwap.Application.Implementations
             try
             {
 
-                var ExchangeOffer = await _exchangeOfferRepository.GetByIdAsync(request.ExchangeOfferId);
+                var ExchangeOffer = await _exchangeOfferRepository.GetOfferByIdAsync(request.ExchangeOfferId);
                 if (ExchangeOffer == null)
                     return Result<AcceptExchangeOfferResponse>.NotFound("Exchange offer not found");
 
@@ -279,6 +296,10 @@ namespace BookSwap.Application.Implementations
                     TransferDate = Time
                 };
 
+                if(ExchangeOffer.WishlistItemId is not null)
+                {
+                    ExchangeOffer.WishlistItem.Status = WishStatus.Fulfilled;  
+                }
 
 
                 await _exchangeOfferRepository.UpdateAsync(ExchangeOffer);
@@ -327,7 +348,7 @@ namespace BookSwap.Application.Implementations
             try
             {
 
-                var ExchangeOffer = await _exchangeOfferRepository.GetByIdAsync(request.ExchangeOfferId);
+                var ExchangeOffer = await _exchangeOfferRepository.GetOfferByIdAsync(request.ExchangeOfferId);
                 if (ExchangeOffer == null)
                 {
                     return Result<bool>.BadRequest("Exchange Offer not found");
@@ -362,6 +383,10 @@ namespace BookSwap.Application.Implementations
                 await _bookRepository.UpdateAsync(requestBook);
                 await _bookRepository.UpdateRangeAsync(OfferedBooks.Select(e => e.Book).ToList());
                 await _exchangeOfferRepository.UpdateAsync(ExchangeOffer);
+                if (ExchangeOffer.WishlistItemId is not null)
+                {
+                    ExchangeOffer.WishlistItem.Status = WishStatus.Public;
+                }
                 await _exchangeOfferRepository.CommitAsync();
                 return Result<bool>.Success(true, "Cancelled Exchange offer has been successfully");
 
@@ -382,7 +407,7 @@ namespace BookSwap.Application.Implementations
             using var transaction = await _exchangeOfferRepository.BeginTransactionAsync();
             try
             {
-                var ExchangeOffer = await _exchangeOfferRepository.GetByIdAsync(request.ExchangeOfferId);
+                var ExchangeOffer = await _exchangeOfferRepository.GetOfferByIdAsync(request.ExchangeOfferId);
                 if (ExchangeOffer == null)
                 {
                     return Result<bool>.BadRequest("Exchange Offer not found");
@@ -417,6 +442,11 @@ namespace BookSwap.Application.Implementations
 
                 await _bookRepository.UpdateRangeAsync(OfferedBooks.Select(e => e.Book).ToList());
                 await _exchangeOfferRepository.UpdateAsync(ExchangeOffer);
+
+                if (ExchangeOffer.WishlistItemId is not null)
+                {
+                    ExchangeOffer.WishlistItem.Status = WishStatus.Public;
+                }
                 await _exchangeOfferRepository.CommitAsync();
                 return Result<bool>.Success(true, "Rejected Exchange offer has been successfully");
             }

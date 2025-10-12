@@ -64,5 +64,10 @@ namespace BookSwap.Infrastructure.Repositories
                 .Include(w => w.ExchangeOffer)
                 .ToListAsync();
         }
+
+        public async Task<WishlistItem?> GetWishlistItemByIdAsync(int WishlistItemId)
+        {
+            return await GetTableNoTracking().Where(x => x.Id == WishlistItemId).FirstOrDefaultAsync();
+        }
     }
 }

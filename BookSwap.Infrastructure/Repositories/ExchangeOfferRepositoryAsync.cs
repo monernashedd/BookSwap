@@ -84,5 +84,13 @@ namespace BookSwap.Infrastructure.Repositories
                 .Include(e => e.Receiver)
                 .ToListAsync();
         }
+
+        public async Task<ExchangeOffer?> GetOfferByIdAsync(int exchangeOfferId)
+        {
+            return await GetTableNoTracking()
+                  .Where(x => x.Id == exchangeOfferId)
+                  .Include(x=>x.WishlistItem)
+                  .FirstOrDefaultAsync();
+        }
     }
 }

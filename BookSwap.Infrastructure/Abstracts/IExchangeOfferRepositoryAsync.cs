@@ -9,6 +9,7 @@ namespace BookSwap.Infrastructure.Abstracts
         // Task<bool> HasAcceptedExchangeAsync(int bookId);
         Task<IEnumerable<ExchangeOffer>> GetByUserAsync(int userId);
         Task<IEnumerable<ExchangeOffer>> GetOffersBySenderAsync(int senderId);
+        Task<ExchangeOffer?> GetOfferByIdAsync(int exchangeOfferId);
         Task<IEnumerable<ExchangeOffer>> GetOffersByReceiverAsync(int receiverId);
         Task<IEnumerable<ExchangeOffer>> GetMyOffersByStatusAsync(ExchangeOfferStatus status, int userId);
         Task<IEnumerable<ExchangeOffer>> GetMyOffersReceivedByStatusAsync(ExchangeOfferStatus status, int reciverId);
