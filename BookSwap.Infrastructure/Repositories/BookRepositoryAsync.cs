@@ -30,7 +30,7 @@ namespace BookSwap.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetBooksByOwnerAsync(int ownerId)
+        public async Task<IEnumerable<Book>> GetBooksForUserAsync(int ownerId)
         {
             return await GetTableNoTracking()
                 .Where(b => b.OwnerId == ownerId)
@@ -62,7 +62,7 @@ namespace BookSwap.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetRejectedBooksByOwnerAsync(int ownerId)
+        public async Task<IEnumerable<Book>> GetRejectedBooksForUserAsync(int ownerId)
         {
             return await GetTableNoTracking()
                 .Where(b => b.OwnerId == ownerId && !b.IsApproved && !string.IsNullOrEmpty(b.RejectionReason))

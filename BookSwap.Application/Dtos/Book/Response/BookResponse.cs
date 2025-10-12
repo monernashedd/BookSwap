@@ -19,5 +19,5 @@ namespace BookSwap.Application.Dtos.Book.Response
         public string? CategoryName { get; set; }
         public BookStatus Status { get; set; }
         public BookCondition Condition { get; set; }
-    }
+    }  
 }

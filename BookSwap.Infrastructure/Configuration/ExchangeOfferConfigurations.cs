@@ -33,6 +33,12 @@ namespace BookSwap.Infrastructure.Configuration
                   .WithMany(x => x.ExchangeOffers)
                   .HasForeignKey(ob => ob.RequestedBookId)
                   .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(ob => ob.WishlistItem)
+                .WithOne(x => x.ExchangeOffer)
+                .HasForeignKey<ExchangeOffer>(ob => ob.WishlistItemId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false);
         }
     }
 }

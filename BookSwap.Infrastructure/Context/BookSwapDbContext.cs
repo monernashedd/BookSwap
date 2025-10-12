@@ -28,6 +28,7 @@ namespace BookSwap.Infrastructure.Context
         public DbSet<ExchangeOffer> ExchangeOffers { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<OfferedBook> OfferedBooks { get; set; }
+        public DbSet<WishlistItem> WishlistItems { get; set; }
         public DbSet<BookOwnershipHistory> BookOwnershipHistory { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

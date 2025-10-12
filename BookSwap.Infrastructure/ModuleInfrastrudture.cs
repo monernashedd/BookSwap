@@ -17,6 +17,7 @@ namespace BookSwap.Infrastructure
             services.AddTransient<IUserRepositoryAsync, UserRepositoryAsync>();
             services.AddTransient<IOfferedBookRepositoryAsync, OfferedBookRepositoryAsync>();
             services.AddTransient<IBookOwnershipHistoryRepositoryAsync, BookOwnershipHistoryRepositoryAsync>();
+            services.AddTransient<IWishlistItemRepositoryAsync, WishlistItemRepositoryAsync>();
             return services;
         }
 

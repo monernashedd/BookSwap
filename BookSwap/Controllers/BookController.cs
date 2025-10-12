@@ -56,7 +56,7 @@ namespace BookSwap.Api.Controllers
             return this.ToApiResult(result);
         }
 
-        [HttpGet]
+        [HttpGet("Approved")]
         public async Task<ApiResult<IEnumerable<BookResponse>>> GetAllApprovedBooks()
         {
             var result = await _bookService.GetAllApprovedBooksAsync();
@@ -71,11 +71,11 @@ namespace BookSwap.Api.Controllers
             return this.ToApiResult(result);
         }
 
-        [HttpGet("Owner/{ownerId}")]
+        [HttpGet("My")]
         [Authorize]
-        public async Task<ApiResult<IEnumerable<BookResponse>>> GetBooksByOwner(int ownerId)
+        public async Task<ApiResult<IEnumerable<BookResponse>>> GetBooksByOwner()
         {
-            var result = await _bookService.GetBooksByOwnerAsync(ownerId);
+            var result = await _bookService.GetBooksForUserAsync();
             return this.ToApiResult(result);
         }
 
@@ -100,10 +100,10 @@ namespace BookSwap.Api.Controllers
             var result = await _bookService.GetRejectedBooksAsync();
             return this.ToApiResult(result);
         }
-        [HttpGet("RejectedBooks/{ownerId}")]
-        public async Task<ApiResult<IEnumerable<BookResponse>>> RejectedBooksByOwnerId(int ownerId)
+        [HttpGet("User/RejectedBooks")]
+        public async Task<ApiResult<IEnumerable<BookResponse>>> RejectedBooksByOwnerId()
         {
-            var result = await _bookService.GetRejectedBooksByOwnerAsync(ownerId);
+            var result = await _bookService.GetRejectedBooksForUserAsync();
             return this.ToApiResult(result);
         }
      
@@ -122,6 +122,6 @@ namespace BookSwap.Api.Controllers
         {
             var result = await _bookService.GetAvailableBooksForExchangeAsync();
             return this.ToApiResult(result);
-        }
+        }       
     }
 }

@@ -21,6 +21,7 @@ namespace BookSwap.Application
             services.AddTransient<IEmailService, EmailService>();
             services.AddTransient<IBookService, BookService>();
             services.AddTransient<IExchangeOfferService, ExchangeOfferService>();
+            services.AddTransient<IWishlistService, WishlistService>();
 
 
             //BackgroundServices

@@ -25,18 +25,14 @@ namespace BookSwap.Application.Implementations
         private readonly IExchangeOfferRepositoryAsync _exchangeOfferRepository;
         private readonly UserManager<User> _userManager;
         private readonly IMediaService _mediaService;
-        private readonly IBookService _bookService;
-
         private readonly IOfferedBookRepositoryAsync _offeredBookRepositoryAsync;
         public ICategoryRepositoryAsync _categoryRepository { get; }
         public ICurrentUserService _currentUserService { get; }
-
         public BookService(
             IBookRepositoryAsync bookRepository,
             ICategoryRepositoryAsync categoryRepository,
             IExchangeOfferRepositoryAsync exchangeOfferRepository,
             UserManager<User> userManager,
-            IHttpContextAccessor httpContextAccessor,
             IMediaService mediaService,
             ICurrentUserService currentUserService,
             IOfferedBookRepositoryAsync offeredBookRepositoryAsync
@@ -263,13 +259,10 @@ namespace BookSwap.Application.Implementations
                 return Result<IEnumerable<BookResponse>>.NotFound("Not Found Pending Approval Books");
             return Result<IEnumerable<BookResponse>>.Success(result);
         }
-        public async Task<Result<IEnumerable<BookResponse>>> GetBooksByOwnerAsync(int ownerId)
+        public async Task<Result<IEnumerable<BookResponse>>> GetBooksForUserAsync()
         {
             var user = await _currentUserService.GetUserAsync();
-            if (ownerId != user.Id)
-                return Result<IEnumerable<BookResponse>>.Failure("You are not authorized to view these books", failureType: ResultFailureType.Forbidden);
-
-            var books = await _bookRepository.GetBooksByOwnerAsync(ownerId);
+            var books = await _bookRepository.GetBooksForUserAsync(user.Id);
             var result = books
                 .Where(b => b.Status != BookStatus.Removed)
                 .Select(b => new BookResponse
@@ -369,10 +362,10 @@ namespace BookSwap.Application.Implementations
             return Result<IEnumerable<BookResponse>>.Success(result);
         }
 
-        public async Task<Result<IEnumerable<BookResponse>>> GetRejectedBooksByOwnerAsync(int ownerId)
+        public async Task<Result<IEnumerable<BookResponse>>> GetRejectedBooksForUserAsync()
         {
             var user = await _currentUserService.GetUserAsync();
-            var books = await _bookRepository.GetRejectedBooksByOwnerAsync(ownerId);
+            var books = await _bookRepository.GetRejectedBooksForUserAsync(user.Id);
             var result = books
                 .Where(b => b.Status != BookStatus.Removed)
                 .Select(b => new BookResponse
@@ -451,7 +444,7 @@ namespace BookSwap.Application.Implementations
         {
             var user = await _currentUserService.GetUserAsync();
             var books = await _bookRepository.GetTableNoTracking()
-                .Where(b => b.OwnerId == user.Id && b.IsApproved && b.IsAvailable)
+                .Where(b => b.OwnerId == user.Id && b.IsApproved && b.IsAvailable && b.Status == BookStatus.Available)
                 .Include(b=>b.Owner)
                 .ToListAsync();
 

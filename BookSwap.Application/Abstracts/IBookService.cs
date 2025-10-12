@@ -13,11 +13,11 @@ namespace BookSwap.Application.Abstracts
         Task<Result<BookResponse>> GetBookByIdAsync(int bookId);
         Task<Result<IEnumerable<BookResponse>>> GetAllApprovedBooksAsync();
         Task<Result<IEnumerable<BookResponse>>> GetPendingApprovalBooksAsync();
-        Task<Result<IEnumerable<BookResponse>>> GetBooksByOwnerAsync(int ownerId);
+        Task<Result<IEnumerable<BookResponse>>> GetBooksForUserAsync();
         Task<Result<IEnumerable<BookResponse>>> SearchBooksAsync(string? searchTerm);
         Task<Result> ApproveBookAsync(ApproveBookRequest request);
         Task<Result<IEnumerable<BookResponse>>> GetRejectedBooksAsync();
-        Task<Result<IEnumerable<BookResponse>>> GetRejectedBooksByOwnerAsync(int ownerId);
+        Task<Result<IEnumerable<BookResponse>>> GetRejectedBooksForUserAsync();
         Task<Result<IEnumerable<BookResponse>>> GetOfferedBooksByExchangeOfferId(int exchangeOfferId);
         Task<Result<IEnumerable<BookResponse>>> GetAvailableBooksForExchangeAsync();
     }

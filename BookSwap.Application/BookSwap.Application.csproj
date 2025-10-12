@@ -27,9 +27,7 @@
 
   <ItemGroup>
     <Folder Include="Dtos\Authontication\Shared\" />
-    <Folder Include="Dtos\Offer\Request\" />
-    <Folder Include="Dtos\Offer\Response\" />
-    <Folder Include="Dtos\Offer\Validators\" />
+    <Folder Include="Dtos\WishListItem\Validators\" />
     <Folder Include="Dtos\User\Shared\" />
   </ItemGroup>
 

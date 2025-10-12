@@ -13,11 +13,14 @@ namespace BookSwap.Core.Entities
         public int RequestedBookId { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public ExchangeOfferStatus Status { get; set; } = ExchangeOfferStatus.Pending;
+        public int? WishlistItemId { get; set; } 
         [ForeignKey(nameof(SenderId))]
         public User Sender { get; set; } = null!;
         [ForeignKey(nameof(ReceiverId))]
         public User Receiver { get; set; } = null!;
         public Book RequestedBook { get; set; } = null!;
-        public IEnumerable<OfferedBook> OfferedBooks { get; set; } = new List<OfferedBook>(); // الكتب المعروضة
+        [ForeignKey(nameof(WishlistItemId))]
+        public WishlistItem WishlistItem { get; set; } 
+        public IEnumerable<OfferedBook> OfferedBooks { get; set; } // الكتب المعروضة
     }
 }

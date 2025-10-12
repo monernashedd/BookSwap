@@ -4,6 +4,7 @@ using BookSwap.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookSwap.Infrastructure.Migrations
 {
     [DbContext(typeof(BookSwapDbContext))]
-    partial class BookSwapDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251008055725_addWishListItemModel")]
+    partial class addWishListItemModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +101,7 @@ namespace BookSwap.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookSwap.Core.Entities.BookOwnershipHistory", b =>
@@ -134,7 +137,7 @@ namespace BookSwap.Infrastructure.Migrations
 
                     b.HasIndex("PreviousOwnerId");
 
-                    b.ToTable("BookOwnershipHistory", (string)null);
+                    b.ToTable("BookOwnershipHistory");
                 });
 
             modelBuilder.Entity("BookSwap.Core.Entities.Category", b =>
@@ -151,7 +154,7 @@ namespace BookSwap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("BookSwap.Core.Entities.ExchangeOffer", b =>
@@ -193,7 +196,7 @@ namespace BookSwap.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[WishlistItemId] IS NOT NULL");
 
-                    b.ToTable("ExchangeOffers", (string)null);
+                    b.ToTable("ExchangeOffers");
                 });
 
             modelBuilder.Entity("BookSwap.Core.Entities.Identity.Role", b =>
@@ -405,7 +408,7 @@ namespace BookSwap.Infrastructure.Migrations
 
                     b.HasIndex("ExchangeOfferId");
 
-                    b.ToTable("OfferedBooks", (string)null);
+                    b.ToTable("OfferedBooks");
                 });
 
             modelBuilder.Entity("BookSwap.Core.Entities.WishlistItem", b =>
@@ -462,7 +465,7 @@ namespace BookSwap.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WishlistItems", (string)null);
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

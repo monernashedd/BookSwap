@@ -26,6 +26,7 @@ namespace BookSwap.Core.Entities.Identity
         public ICollection<ExchangeOffer> SentOffers { get; set; } =new List<ExchangeOffer>();
         [InverseProperty(nameof(ExchangeOffer.Receiver))]
         public ICollection<ExchangeOffer> ReceivedOffers { get; set; } = new List<ExchangeOffer>();
+        public ICollection<WishlistItem> WishlistItems { get; set; } = new List<WishlistItem>();
 
     }
 }
